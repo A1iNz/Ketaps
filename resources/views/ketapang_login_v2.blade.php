@@ -202,11 +202,16 @@
                         <div class="or-txt">atau</div>
                         <div class="or-line"></div>
                     </div>
+
                     <form method="POST" action="{{ route('login') }}" id="guest-login-form">
                         @csrf
                         <input type="hidden" name="form_type" value="guest">
-                        <div class="field"></div>
-                        <button type="submit" class="guest-btn" id="guest-login-btn">Masuk sebagai Tamu</button>
+                        <button type="submit" class="guest-btn" id="guest-login-btn"
+                            style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; background: #fff; border-radius: 12px; color: #64748b; font-weight: 700; cursor: pointer; transition: 0.3s;"
+                            onmouseover="this.style.background='#f8fafc'; this.style.color='#0f172a'"
+                            onmouseout="this.style.background='#fff'; this.style.color='#64748b'">
+                            Masuk sebagai Tamu
+                        </button>
                     </form>
                 </div>
 
@@ -313,14 +318,13 @@
                     @if ($errors->any() && old('form_type') === 'register')
                         <div
                             style="background: var(--coral-lt); border: 1px solid var(--coral); border-radius: 10px; padding: 12px; font-size: 12px; color: var(--coral); margin-bottom: 16px;">
-                            <ul style="list-style-position: inside; padding-left: 5px;">
+                            <ul style="list-style-position: inside; padding-left: 5px; margin:0;">
                                 @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
                                 @endforeach
                             </ul>
                         </div>
                     @endif
-
 
                     <div class="role-tabs">
                         <div class="rt on" id="rtr-siswa" onclick="setRegRole('siswa')">
@@ -337,120 +341,94 @@
                         </div>
                     </div>
 
-                    <div id="reg-siswa-fields">
-                        <div class="field-row">
-                            <div class="field">
-                                <label class="field-label">Nama Depan *</label>
-                                <input type="text" class="field-input" id="reg-fname" placeholder="Aldi">
+                    <form method="POST" action="{{ route('register') }}" id="register-form">
+                        @csrf
+                        <input type="hidden" name="form_type" value="register">
+                        <input type="hidden" name="role" id="reg-role-input" value="siswa">
+
+                        <div id="reg-siswa-fields">
+                            <div class="field-row">
+                                <div class="field">
+                                    <label class="field-label">Nama Depan *</label>
+                                    <input type="text" name="fname" class="field-input" placeholder="Aldi">
+                                </div>
+                                <div class="field">
+                                    <label class="field-label">Nama Belakang *</label>
+                                    <input type="text" name="lname" class="field-input" placeholder="Ramadan">
+                                </div>
                             </div>
+
                             <div class="field">
-                                <label class="field-label">Nama Belakang *</label>
-                                <input type="text" class="field-input" id="reg-lname" placeholder="Ramadan">
+                                <label class="field-label">Email *</label>
+                                <input type="email" name="email" class="field-input"
+                                    placeholder="aldi@email.com">
+                            </div>
+
+                            <div class="field">
+                                <label class="field-label">Sekolah *</label>
+                                <select name="sekolah" class="field-select">
+                                    <option value="">Pilih sekolah</option>
+                                    <option value="SMKN 1 Ketapang">SMKN 1 Ketapang</option>
+                                    <option value="SMKN 2 Ketapang">SMKN 2 Ketapang</option>
+                                    <option value="SMAN 1 Ketapang">SMAN 1 Ketapang</option>
+                                </select>
+                            </div>
+
+                            <div class="field">
+                                <label class="field-label">Jurusan *</label>
+                                <select name="jurusan" class="field-select">
+                                    <option value="">Pilih jurusan</option>
+                                    <option value="Agribisnis">Agribisnis</option>
+                                    <option value="Teknik Mesin">Teknik Mesin</option>
+                                    <option value="Teknik Informatika">Teknik Informatika</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="reg-perusahaan-fields" style="display:none">
+                            <div class="company-badge">
+                                <span>🏢</span> Perusahaan Mitra
+                            </div>
+
+                            <div class="field">
+                                <label class="field-label">Nama Perusahaan *</label>
+                                <input type="text" name="company_name" class="field-input"
+                                    placeholder="PT. Sawit Jaya">
+                            </div>
+
+                            <div class="field">
+                                <label class="field-label">Email Perusahaan *</label>
+                                <input type="email" name="company_email" class="field-input"
+                                    placeholder="hr@sawitjaya.com">
+                            </div>
+
+                            <div class="field">
+                                <label class="field-label">Bidang Usaha *</label>
+                                <select name="company_sector" class="field-select">
+                                    <option value="">Pilih bidang</option>
+                                    <option value="Pertanian & Perkebunan">Pertanian & Perkebunan</option>
+                                    <option value="Manufaktur">Manufaktur</option>
+                                    <option value="Teknologi">Teknologi</option>
+                                </select>
                             </div>
                         </div>
 
                         <div class="field">
-                            <label class="field-label">Email *</label>
-                            <input type="email" class="field-input" id="reg-email" placeholder="aldi@email.com">
+                            <label class="field-label">Kata Sandi *</label>
+                            <div class="pw-wrap">
+                                <input type="password" name="password" class="field-input" id="reg-pw"
+                                    placeholder="Minimal 8 karakter" required>
+                                <button type="button" class="eye-btn" onclick="togglePw('reg-pw', this)">👁</button>
+                            </div>
                         </div>
 
-                        <div class="field">
-                            <label class="field-label">No. HP *</label>
-                            <input type="tel" class="field-input" id="reg-hp" placeholder="081234567890">
+                        <div class="cb-row">
+                            <input type="checkbox" id="terms" required>
+                            <label for="terms">Saya setuju dengan <a href="#">Syarat & Ketentuan</a></label>
                         </div>
 
-                        <div class="field">
-                            <label class="field-label">Sekolah *</label>
-                            <select class="field-select" id="reg-school">
-                                <option value="">Pilih sekolah</option>
-                                <option>SMKN 1 Ketapang</option>
-                                <option>SMKN 2 Ketapang</option>
-                                <option>SMAN 1 Ketapang</option>
-                                <option>SMA Muhammadiyah Ketapang</option>
-                            </select>
-                        </div>
-
-                        <div class="field">
-                            <label class="field-label">Jurusan *</label>
-                            <select class="field-select" id="reg-major">
-                                <option value="">Pilih jurusan</option>
-                                <option>Agribisnis</option>
-                                <option>Teknik Mesin</option>
-                                <option>Teknik Elektro</option>
-                                <option>Akuntansi</option>
-                            </select>
-                        </div>
-
-                        <div class="field">
-                            <label class="field-label">Kelas *</label>
-                            <select class="field-select" id="reg-grade">
-                                <option value="">Pilih kelas</option>
-                                <option>X (10)</option>
-                                <option>XI (11)</option>
-                                <option>XII (12)</option>
-                                <option>Lulusan</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div id="reg-perusahaan-fields" style="display:none">
-                        <div class="company-badge">
-                            <span>🏢</span> Perusahaan Mitra
-                        </div>
-
-                        <div class="field">
-                            <label class="field-label">Nama Perusahaan *</label>
-                            <input type="text" class="field-input" id="reg-company-name"
-                                placeholder="PT. Sawit Jaya">
-                        </div>
-
-                        <div class="field">
-                            <label class="field-label">Email Perusahaan *</label>
-                            <input type="email" class="field-input" id="reg-company-email"
-                                placeholder="hr@sawitjaya.com">
-                        </div>
-
-                        <div class="field">
-                            <label class="field-label">No. HP PIC *</label>
-                            <input type="tel" class="field-input" id="reg-company-hp"
-                                placeholder="081234567890">
-                        </div>
-
-                        <div class="field">
-                            <label class="field-label">Bidang Usaha *</label>
-                            <select class="field-select" id="reg-company-sector">
-                                <option value="">Pilih bidang</option>
-                                <option>Pertanian & Perkebunan</option>
-                                <option>Manufaktur</option>
-                                <option>Jasa</option>
-                                <option>Perdagangan</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="field-label">Kata Sandi *</label>
-                        <div class="pw-wrap">
-                            <input type="password" class="field-input" id="reg-pw"
-                                placeholder="Minimal 8 karakter" oninput="checkStrength(this.value)">
-                            <button class="eye-btn" onclick="togglePw('reg-pw', this)">👁</button>
-                        </div>
-                        <div class="pw-bars">
-                            <div class="pw-bar" id="pb1"></div>
-                            <div class="pw-bar" id="pb2"></div>
-                            <div class="pw-bar" id="pb3"></div>
-                            <div class="pw-bar" id="pb4"></div>
-                        </div>
-                        <div class="pw-hint" id="pw-hint">Min. 8 karakter</div>
-                    </div>
-
-                    <div class="cb-row">
-                        <input type="checkbox" id="terms">
-                        <label for="terms">Saya setuju dengan <a href="#">Syarat & Ketentuan</a> serta <a
-                                href="#">Kebijakan Privasi</a></label>
-                    </div>
-
-                    <button class="submit-btn" onclick="doRegister()">Buat Akun Gratis →</button>
+                        <button type="submit" class="submit-btn">Buat Akun Gratis →</button>
+                    </form>
 
                     <button class="back-link" onclick="showView('role')">← Sudah punya akun? Masuk</button>
                 </div>
@@ -657,6 +635,7 @@
                 }
             @endif
         });
+        document.getElementById('reg-role-input').value = role;
     </script>
 </body>
 

@@ -74,9 +74,20 @@
         <div class="dropdown-profile" style="margin-right: -5px; position: relative; cursor: pointer;">
             <div style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); padding: 4px 14px 4px 4px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;"
                 class="btn-hover">
+                @php
+                    // Logika mengambil huruf pertama dari setiap kata
+                    $words = explode(' ', auth()->user()->name);
+                    $initials = '';
+                    foreach ($words as $word) {
+                        $initials .= strtoupper(substr($word, 0, 1));
+                    }
+                    // Batasi maksimal 2 atau 3 huruf agar tidak kepanjangan
+                    $displayInitials = substr($initials, 0, 2);
+                @endphp
+
                 <div
-                    style="background: #10b981; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff;">
-                    {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                    style="width: 40px; height: 40px; background:  linear-gradient(135deg, #10b981, #3b82f6); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; letter-spacing: 1px;">
+                    {{ $displayInitials }}
                 </div>
                 <div style="color: #fff; font-weight: 700; font-size: 14px;">
                     {{ explode(' ', auth()->user()->name)[0] }}

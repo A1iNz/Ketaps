@@ -23,5 +23,8 @@ class DatabaseSeeder extends Seeder
             'password' => 'secret'
             
         ]);
+        $this->call([
+            AdminSeeder::class,
+        ]);
     }
 }

@@ -1,229 +1,210 @@
 @extends('dashboard.index')
-
 @section('konten_tengah')
-    <div style="font-family: 'Nunito', sans-serif;">
-        <div
-            style="background: #0f172a; border-radius: 16px; padding: 24px; display: flex; align-items: center; gap: 24px; position: relative; overflow: hidden; margin-bottom: 24px; color: #fff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+    <div style="font-family: 'Plus Jakarta Sans', sans-serif;">
+        
+        @if (auth()->user()->role !== 'GUEST')
+            <div style="background: #0f172a; border-radius: 16px; padding: 24px; display: flex; align-items: center; gap: 24px; position: relative; overflow: hidden; margin-bottom: 24px; color: #fff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                <div style="position: absolute; right: -50px; top: -50px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%); border-radius: 50%; z-index: 0;"></div>
+                <div style="font-size: 42px; line-height: 1; position: relative; z-index: 1;">🎯</div>
+                <div style="flex: 1; position: relative; z-index: 1;">
+                    <h2 style="margin: 0 0 6px 0; font-weight: 800; font-size: 14px; color: #ffffff;">Profil 78% lengkap — Tambahkan CV untuk skor lebih tinggi</h2>
+                    <p style="margin: 0; color: #94a3b8; font-weight: 700; font-size: 12px;">Profil lengkap meningkatkan peluang dilihat pemberi kerja hingga 3×</p>
+                </div>
+                <div style="position: relative; z-index: 1;">
+                    <a href="{{ route('dashboard.profil') }}" style="display: inline-block; background: #10b981; color: #fff; padding: 12px 24px; border-radius: 10px; font-weight: 700; text-decoration: none; font-size: 14px; white-space: nowrap; transition: background 0.3s ease;" class="hover-green">Lengkapi Profil →</a>
+                </div>
+            </div>
+        @endif
 
-            <div
-                style="position: absolute; right: -50px; top: -50px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%); border-radius: 50%; z-index: 0;">
+        <form id="filterForm" action="{{ route('dashboard.cari-kerja') }}" method="GET" style="margin-bottom: 16px;">
+            <div class="search-bar-pill">
+                
+                <div class="search-input-group custom-dropdown" id="dropdownSector">
+                    <div class="dropdown-selected">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                        <span class="selected-text">Semua Sektor Industri</span>
+                        <input type="hidden" name="sector" value="{{ request('sector') }}">
+                        <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="3"><path d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="dropdown-menu-list">
+                        <div class="dropdown-item" data-value="">Semua Sektor Industri</div>
+                        @foreach($sectors as $sector)
+                            <div class="dropdown-item" data-value="{{ $sector->slug }}">{{ $sector->nama_sektor }}</div>
+                        @endforeach
+                    </div>
+                </div>
+
+                <div class="search-divider"></div>
+
+                <div class="search-input-group custom-dropdown" id="dropdownLocation">
+                    <div class="dropdown-selected">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        <span class="selected-text">Semua Lokasi</span>
+                        <input type="hidden" name="location" value="{{ request('location') }}">
+                        <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="3"><path d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="dropdown-menu-list">
+                        <div class="dropdown-item" data-value="">Semua Lokasi</div>
+                        <div class="dropdown-item" data-value="Surabaya">Surabaya</div>
+                        <div class="dropdown-item" data-value="Sidoarjo">Sidoarjo</div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-search-main">Cari</button>
             </div>
 
-            <div style="font-size: 42px; line-height: 1; position: relative; z-index: 1;">
-                🎯
+            <div class="filter-pills-row">
+                <a href="{{ route('dashboard.cari-kerja', array_merge(request()->all(), ['type' => ''])) }}" class="pill-chip {{ !request('type') ? 'active' : '' }}">Semua</a>
+                <a href="{{ route('dashboard.cari-kerja', array_merge(request()->all(), ['type' => 'Magang'])) }}" class="pill-chip {{ request('type') == 'Magang' ? 'active' : '' }}">🎓 Magang</a>
+                <a href="{{ route('dashboard.cari-kerja', array_merge(request()->all(), ['type' => 'Full-time'])) }}" class="pill-chip {{ request('type') == 'Full-time' ? 'active' : '' }}">💼 Full-time</a>
             </div>
+        </form>
 
-            <div style="flex: 1; position: relative; z-index: 1;">
-                <h2 style="margin: 0 0 6px 0; font-weight: 800; font-size: 12px; color: #ffffff;">
-                    Profil 78% lengkap — Tambahkan CV untuk skor lebih tinggi
-                </h2>
-                <p style="margin: 0; color: #94a3b8; font-weight: 700; font-size: 11px;">
-                    Profil lengkap meningkatkan peluang dilihat pemberi kerja hingga 3×
-                </p>
-            </div>
-
-            <div style="position: relative; z-index: 1;">
-                <a href="{{ route('dashboard.profil') }}"
-                    style="display: inline-block; background: #10b981; color: #fff; padding: 12px 24px; border-radius: 10px; font-weight: 700; text-decoration: none; font-size: 14px; white-space: nowrap; transition: background 0.3s ease;">
-                    Lengkapi Profil →
-                </a>
-            </div>
-
+        <div class="status-tabs">
+            <a href="#" class="tab-link active">Semua Lowongan</a>
+            <a href="#" class="tab-link">Rekomendasi AI ✨</a>
+            <a href="#" class="tab-link">Sedang Dilamar</a>
         </div>
 
-        <div
-            style="background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
-            <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
-                <select
-                    style="flex: 1; min-width: 110px; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 11px; color: #475569; outline: none; font-weight: 600;">
-                    <option>Semua Sektor</option>
-                    <option>Pertanian & Sawit</option>
-                </select>
-                <select
-                    style="flex: 1; min-width: 110px; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 11px; color: #475569; outline: none; font-weight: 600;">
-                    <option>Semua Kecamatan</option>
-                    <option>Muara Pawan</option>
-                </select>
-                <select
-                    style="flex: 1; min-width: 110px; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 11px; color: #475569; outline: none; font-weight: 600;">
-                    <option>Semua Tipe</option>
-                    <option>Magang</option>
-                </select>
-                <button
-                    style="background: #0f172a; color: #fff; border: none; padding: 6px 14px; border-radius: 6px; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
-                    🔍 Filter
-                </button>
-                <button
-                    style="background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer;">
-                    Reset
-                </button>
-            </div>
-
-            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                <span
-                    style="background: #0f172a; color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 10px; cursor: pointer;">Semua
-                    (28)</span>
-                <span
-                    style="background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; padding: 4px 10px; border-radius: 12px; font-size: 10px; cursor: pointer;"
-                    class="hover-bg">🎓 Magang (12)</span>
-                <span
-                    style="background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; padding: 4px 10px; border-radius: 12px; font-size: 10px; cursor: pointer;"
-                    class="hover-bg">💼 Full-time (10)</span>
-                <span
-                    style="background: #fef3c7; color: #d97706; border: 1px solid #fde68a; padding: 4px 10px; border-radius: 12px; font-size: 10px; cursor: pointer;">⭐
-                    Match >80</span>
-            </div>
-        </div>
-
-        <div style="display: flex; align-items: center; margin-top: 5px; margin-bottom: 2px; border-bottom: 1px solid #e2e8f0; gap: 20px;">
-            <div
-                style="padding-bottom: 8px; border-bottom: 2px solid #0f172a; color: #0f172a; font-size: 12px; cursor: pointer;">
-                Semua Lowongan</div>
-            <div style="padding-bottom: 8px; color: #64748b; font-size: 12px; cursor: pointer;" class="hover-text">
-                Rekomendasi AI</div>
-            <div style="padding-bottom: 8px; color: #64748b; font-size: 12px; cursor: pointer;" class="hover-text">Sedang
-                Dilamar</div>
-        </div>
-
-        <div style="padding-top:5px; display: flex; justify-content: space-between; align-items: center;">
-            <div style="font-size: 12px; color: #0f172a;">Menampilkan 28 lowongan</div>
-            <select
-                style="margin-top:5px; margin-bottom: 5px;; padding: 4px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 11px; color: #475569; outline: none;">
-                <option>Paling Relevan</option>
-                <option>Terbaru Ditambahkan</option>
-            </select>
-        </div>
-
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-
-            <div
-                style="background: #fff; border: 2px solid #3b82f6; border-radius: 10px; padding: 12px; box-shadow: 0 2px 6px rgba(59, 130, 246, 0.1);">
-
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-                    <div style="display: flex; gap: 10px; align-items: center;">
-                        <div
-                            style="width: 36px; height: 36px; background: #ecfdf5; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px;">
-                            🌿</div>
-                        <div>
-                            <div style="font-size: 14px; color: #0f172a;">Operator Kebun & Pemantau Lingkungan</div>
-                            <div style="font-size: 11px; color: #64748b; font-weight: 600;">Cargill Ketapang Mill · Muara
-                                Pawan</div>
+        <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 24px;">
+            @forelse($jobs as $job)
+                <div class="job-card-wide">
+                    @php
+                        $words = explode(' ', trim($job->company_name));
+                        $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
+                    @endphp
+                    <div class="company-logo-box">{{ $initials }}</div>
+                    <div style="flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                            <h3 style="margin: 0; font-size: 17px; font-weight: 800; color: #0f172a;">{{ $job->title }}</h3>
+                            <span class="verified-badge">✓ Verified</span>
+                        </div>
+                        <p style="margin: 0 0 12px 0; font-size: 13px; color: #3b82f6; font-weight: 700;">{{ $job->company_name }}</p>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span class="info-item">📍 {{ $job->location }}</span>
+                            <span class="info-dot"></span>
+                            <span class="info-item">💼 {{ $job->type }}</span>
                         </div>
                     </div>
-                    <div
-                        style="background: #10b981; color: #fff; font-size: 8px; padding: 3px 6px; border-radius: 4px; letter-spacing: 0.5px;">
-                        ⭐ UNGGULAN</div>
-                </div>
-
-                <div style="display: flex; gap: 4px; margin-bottom: 8px; flex-wrap: wrap;">
-                    <span
-                        style="background: #ecfdf5; color: #10b981; font-size: 9px; padding: 3px 8px; border-radius: 10px;">Magang
-                        &rarr; Full-time</span>
-                    <span
-                        style="background: #fef3c7; color: #d97706; font-size: 9px; padding: 3px 8px; border-radius: 10px;">Sawit
-                        & Agrikultur</span>
-                    <span
-                        style="background: #f8fafc; color: #64748b; font-size: 9px; padding: 3px 8px; border-radius: 10px; border: 1px solid #e2e8f0;">RSPO</span>
-                </div>
-
-                <div
-                    style="display: flex; gap: 12px; font-size: 10px; color: #64748b; font-weight: 600; margin-bottom: 8px;">
-                    <div style="display: flex; align-items: center; gap: 4px;"><span
-                            style="color: #ef4444; font-size: 12px;">📍</span> Muara Pawan</div>
-                    <div style="display: flex; align-items: center; gap: 4px;"><span
-                            style="color: #94a3b8; font-size: 12px;">⏱</span> 3 bln magang + tetap</div>
-                </div>
-
-                <div
-                    style="font-size: 11px; color: #475569; line-height: 1.4; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                    Bergabung sebagai operator kebun di Cargill Ketapang Mill. Program magang langsung dengan pelatihan K3
-                    dan sertifikasi RSPO resmi untuk persiapan karir jangka panjang.
-                </div>
-
-                <div
-                    style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid #f1f5f9;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <div
-                            style="background: #ecfdf5; color: #10b981; font-size: 10px; padding: 3px 8px; border-radius: 10px;">
-                            ✓ Match 96/100</div>
-                        <div style="font-size: 10px; color: #ef4444;">⏰ Tutup 15 Mei</div>
-                    </div>
-                    <div style="display: flex; gap: 6px;">
-                        <button
-                            style="background: #f8fafc; border: 1px solid #e2e8f0; color: #64748b; padding: 4px 10px; border-radius: 6px; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 4px;"
-                            class="hover-bg">
-                            📌 Simpan
-                        </button>
-                        <button
-                            style="background: #eff6ff; border: 1px solid #bfdbfe; color: #3b82f6; padding: 4px 10px; border-radius: 6px; font-size: 11px; cursor: default;">
-                            ✓ Terkirim!
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div
-                style="background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
-
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-                    <div style="display: flex; gap: 10px; align-items: center;">
-                        <div
-                            style="width: 36px; height: 36px; background: #fef2f2; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px;">
-                            💊</div>
-                        <div>
-                            <div style="font-size: 14px; color: #0f172a;">Asisten Bidan & Kader Posyandu</div>
-                            <div style="font-size: 11px; color: #64748b; font-weight: 600;">Puskesmas Muara Pawan</div>
+                    <div style="text-align: right; min-width: 180px; border-left: 1px solid #f1f5f9; padding-left: 20px;">
+                        <div style="font-size: 11px; color: #94a3b8; font-weight: 600; margin-bottom: 12px;">
+                            Aktif {{ $job->created_at->diffForHumans() }}
+                        </div>
+                        <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                            <button type="button" class="btn-wide-outline">Detail</button>
+                            <button type="button" class="btn-wide-primary">Lamar</button>
                         </div>
                     </div>
-                    <div style="background: #fef2f2; color: #ef4444; font-size: 8px; padding: 3px 6px; border-radius: 4px;">
-                        BARU</div>
                 </div>
-
-                <div style="display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap;">
-                    <span
-                        style="background: #fef2f2; color: #ef4444; font-size: 9px; padding: 3px 8px; border-radius: 10px;">Full-time</span>
-                    <span
-                        style="background: #ecfdf5; color: #10b981; font-size: 9px; padding: 3px 8px; border-radius: 10px;">Kesehatan</span>
-                </div>
-
-                <div
-                    style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid #f1f5f9;">
-                    <div
-                        style="background: #ecfdf5; color: #10b981; font-size: 10px; padding: 3px 8px; border-radius: 10px;">
-                        ✓ Match 91/100</div>
-                    <div style="display: flex; gap: 6px;">
-                        <button
-                            style="background: #f8fafc; border: 1px solid #e2e8f0; color: #64748b; padding: 4px 10px; border-radius: 6px; font-size: 11px; cursor: pointer;"
-                            class="hover-bg">
-                            📌 Simpan
-                        </button>
-                        <button
-                            style="background: #10b981; border: none; color: #fff; padding: 4px 12px; border-radius: 6px; font-size: 11px; cursor: pointer;"
-                            class="hover-green">
-                            Lamar Sekarang
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-
+            @empty
+                <div style="text-align: center; padding: 60px; color: #64748b;">Belum ada lowongan.</div>
+            @endforelse
         </div>
-
     </div>
 
     <style>
-        .hover-bg:hover {
-            background: #e2e8f0 !important;
-            color: #0f172a !important;
+        /* CUSTOM DROPDOWN CSS */
+        .custom-dropdown { position: relative; cursor: pointer; user-select: none; }
+        
+        .dropdown-selected {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 15px;
         }
 
-        .hover-text:hover {
-            color: #0f172a !important;
+        .selected-text { font-size: 13px; font-weight: 700; color: #0f172a; flex: 1; }
+        .chevron { transition: 0.3s; }
+        
+        /* INI TAMPILAN LIST MENU (KAYAK TABEL MODAL) */
+        .dropdown-menu-list {
+            position: absolute;
+            top: calc(100% + 15px);
+            left: 0;
+            width: 100%;
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            z-index: 99;
+            display: none; /* Sembunyi secara default */
+            overflow: hidden;
+            padding: 8px;
         }
 
-        .hover-green:hover {
-            background: #059669 !important;
-            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+        .dropdown-item {
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            border-radius: 10px;
+            transition: 0.2s;
         }
+
+        .dropdown-item:hover { background: #f1f5f9; color: #0f172a; }
+        
+        /* Efek Aktif */
+        .custom-dropdown.active .dropdown-menu-list { display: block; }
+        .custom-dropdown.active .chevron { transform: rotate(180deg); }
+
+        /* SEARCH BAR PILL */
+        .search-bar-pill { display: flex; align-items: center; background: #fff; border: 1px solid #e2e8f0; border-radius: 9999px; padding: 6px 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); margin-bottom: 12px; }
+        .search-input-group { flex: 1; }
+        .search-divider { width: 1px; height: 28px; background: #e2e8f0; margin: 0 8px; }
+        .btn-search-main { background: #0f172a; color: #fff; border: none; padding: 10px 24px; border-radius: 9999px; font-weight: 800; font-size: 13px; cursor: pointer; transition: 0.2s; margin-left: 8px; }
+
+        /* TIPE CHIPS & TAB LINKS */
+        .filter-pills-row { display: flex; gap: 8px; margin-bottom: 24px; }
+        .pill-chip { padding: 6px 16px; border-radius: 9999px; font-size: 12px; font-weight: 700; text-decoration: none; border: 1px solid #e2e8f0; background: #fff; color: #64748b; }
+        .pill-chip.active { background: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
+        .status-tabs { display: flex; gap: 24px; border-bottom: 1px solid #e2e8f0; }
+        .tab-link { padding-bottom: 12px; font-size: 13px; font-weight: 700; color: #64748b; text-decoration: none; position: relative; }
+        .tab-link.active { color: #0f172a; }
+        .tab-link.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background: #0f172a; }
+
+        /* WIDE CARD */
+        .job-card-wide { background: #fff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 24px; display: flex; align-items: center; gap: 24px; transition: 0.3s; }
+        .job-card-wide:hover { border-color: #cbd5e1; transform: translateY(-2px); }
+        .company-logo-box { width: 60px; height: 60px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; color: #0f172a; flex-shrink: 0; }
+        .verified-badge { background: #ecfdf5; color: #10b981; font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 9999px; border: 1px solid #a7f3d0; text-transform: uppercase; }
+        .info-item { font-size: 12px; color: #64748b; font-weight: 600; }
+        .info-dot { width: 4px; height: 4px; background: #cbd5e1; border-radius: 50%; }
+        .btn-wide-outline { background: #fff; color: #475569; border: 1px solid #cbd5e1; padding: 10px 18px; border-radius: 10px; font-weight: 700; font-size: 12px; cursor: pointer; }
+        .btn-wide-primary { background: #0f172a; color: #fff; border: none; padding: 10px 24px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer; }
+        .hover-green:hover { background: #059669 !important; }
     </style>
+
+    <script>
+        document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+            const selected = dropdown.querySelector('.dropdown-selected');
+            const menu = dropdown.querySelector('.dropdown-menu-list');
+            const input = dropdown.querySelector('input');
+            const selectedText = dropdown.querySelector('.selected-text');
+
+            // Klik untuk buka/tutup
+            selected.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Tutup dropdown lain
+                document.querySelectorAll('.custom-dropdown').forEach(d => {
+                    if (d !== dropdown) d.classList.remove('active');
+                });
+                dropdown.classList.toggle('active');
+            });
+
+            // Klik item untuk pilih
+            menu.querySelectorAll('.dropdown-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    input.value = item.dataset.value;
+                    selectedText.innerText = item.innerText;
+                    dropdown.classList.remove('active');
+                });
+            });
+        });
+
+        // Klik di luar untuk tutup
+        window.addEventListener('click', () => {
+            document.querySelectorAll('.custom-dropdown').forEach(d => d.classList.remove('active'));
+        });
+    </script>
 @endsection

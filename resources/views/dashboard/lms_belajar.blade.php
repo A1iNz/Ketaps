@@ -77,36 +77,36 @@
         </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px;">
-        <div
-            style="background: #fff; padding: 16px; border-radius: 12px; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-            <div style="font-size: 28px; margin-bottom: 12px;">🌿</div>
-            <div style="font-size: 15px; font-weight: 800; color: #1e293b; margin-bottom: 12px;">Pemupukan Presisi</div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; padding: 20px;">
+        @forelse($materis as $materi)
+            <div style="background: #fff; border-radius: 20px; border: 1px solid #e2e8f0; overflow: hidden; transition: 0.3s; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);"
+                class="hover-card">
+                <div
+                    style="height: 140px; background: {{ $materi->kategori == 'Kesiapan Kerja' ? '#eff6ff' : '#ecfdf5' }}; display: flex; align-items: center; justify-content: center; font-size: 50px;">
+                    {{ $materi->kategori == 'Kesiapan Kerja' ? '💼' : '🚀' }}
+                </div>
 
-            <div
-                style="display: flex; justify-content: space-between; font-size: 11px; color: #64748b; margin-bottom: 6px; font-weight: 700;">
-                <span>Progres</span>
-                <span>40%</span>
-            </div>
-            <div style="width: 100%; height: 6px; background: #f1f5f9; border-radius: 10px; overflow: hidden;">
-                <div style="width: 40%; height: 100%; background: #10b981; border-radius: 10px;"></div>
-            </div>
-        </div>
+                <div style="padding: 24px;">
+                    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                        <span
+                            style="font-size: 10px; font-weight: 800; color: #3b82f6; text-transform: uppercase; background: #eff6ff; padding: 4px 8px; border-radius: 6px;">{{ $materi->kategori }}</span>
+                        <span
+                            style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; background: #f1f5f9; padding: 4px 8px; border-radius: 6px;">PDF</span>
+                    </div>
 
-        <div
-            style="background: #fff; padding: 16px; border-radius: 12px; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-            <div style="font-size: 28px; margin-bottom: 12px;">🚜</div>
-            <div style="font-size: 15px; font-weight: 800; color: #1e293b; margin-bottom: 12px;">Alat Berat Kelapa Sawit
-            </div>
+                    <h3 style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0 0 8px 0; line-height: 1.4;">
+                        {{ $materi->judul }}</h3>
+                    <p style="font-size: 13px; color: #64748b; line-height: 1.5; margin-bottom: 24px;">
+                        {{ Str::limit($materi->deskripsi, 80) }}</p>
 
-            <div
-                style="display: flex; justify-content: space-between; font-size: 11px; color: #64748b; margin-bottom: 6px; font-weight: 700;">
-                <span>Progres</span>
-                <span>10%</span>
+                    <a href="{{ asset('storage/' . $materi->file_pdf) }}" target="_blank"
+                        style="display: block; text-align: center; background: #0f172a; color: #fff; padding: 12px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 14px;">
+                        Baca Modul
+                    </a>
+                </div>
             </div>
-            <div style="width: 100%; height: 6px; background: #f1f5f9; border-radius: 10px; overflow: hidden;">
-                <div style="width: 10%; height: 100%; background: #10b981; border-radius: 10px;"></div>
-            </div>
-        </div>
+        @empty
+            <p>Belum ada modul tersedia.</p>
+        @endforelse
     </div>
 @endsection
